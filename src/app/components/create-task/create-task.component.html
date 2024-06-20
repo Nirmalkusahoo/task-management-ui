@@ -1,0 +1,37 @@
+<form [formGroup]="taskFormGroup">
+  <mat-form-field>
+    <mat-label>Enter Task name</mat-label>
+    <input
+      matInput
+      formControlName="name"
+      required
+    />
+    @if (name.invalid && name.touched) {
+    <mat-error>Task name is mandatory</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Enter Description</mat-label>
+    <input
+      matInput
+      formControlName="description"
+      required
+    />
+    @if (description.invalid && description.touched) {
+    <mat-error>Description is mandatory</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Select Status</mat-label>
+    <mat-select formControlName="status" name="status">
+      @for (status of statusOptions; track status) {
+      <mat-option [value]="status.value">{{status.viewValue}}</mat-option>
+      }
+    </mat-select>
+    @if (status.invalid && status.touched) {
+    <mat-error>Status is mandatory</mat-error>
+    }
+  </mat-form-field>
+  <button mat-flat-button (click)="onSubmit()">Submit</button>
+</form>
