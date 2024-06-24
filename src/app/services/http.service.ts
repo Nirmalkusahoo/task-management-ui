@@ -20,19 +20,9 @@ export class HttpService {
     return this.http.get(url, {headers: header, params: param});
   }
 
-  public getBlobTypeData(url: string): Observable<Blob> {
-    return this.http.get(url, {
-      responseType: 'blob',
-    });
-  }
 
-  public postData(url: string, postData: any, header?: any): Observable<any> {
-
-    let headers: HttpHeaders = new HttpHeaders();
-    if (header) {
-      headers = header;
-    }
-    return this.http.post(url, postData, {headers});
+  public postData(url: string, postData: any): Observable<any> {
+    return this.http.post(url, postData);
   }
 
 

@@ -4,6 +4,7 @@ import {TaskModel} from "../../models/task.model";
 import {Router} from "@angular/router";
 import {HttpService} from "../../services/http.service";
 import {TaskService} from "../../services/task.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-list-task',
@@ -12,12 +13,11 @@ import {TaskService} from "../../services/task.service";
 })
 export class ListTaskComponent {
 
-  taskList: TaskModel[] = [{name: 'Hydrogen', description: 'working', status: 'inProgress'},
-  ]
+  taskList: TaskModel[] = []
   displayedColumns: string[] = ['name', 'description', 'status', 'edit'];
   dataSource = new MatTableDataSource(this.taskList);
 
-  constructor(private router: Router, private httpService: HttpService, private taskService: TaskService) {
+  constructor(private router: Router, private httpService: HttpService, private taskService: TaskService, private matSnackBar: MatSnackBar,) {
     this.getAllTask()
   }
 
@@ -31,17 +31,30 @@ export class ListTaskComponent {
   }
 
   private getAllTask(): void {
-    const url = 'api/task/all';
-    this.httpService.getData(url).subscribe((data) => {
-      this.taskList = data;
-      this.dataSource = new MatTableDataSource(this.taskList);
+    this.taskService.getAllTask().subscribe((data) => {
+      if (data.length > 0) {
+        this.taskList = data;
+        this.dataSource = new MatTableDataSource(this.taskList);
+      } else if (data.length === 0) {
+        this.showSnackBarMessage('There are no task to be displayed. Please create a task.', 2000);
+      }
+
     });
   }
 
   public deleteTask(item: TaskModel): void {
     this.taskService.deleteTask(item.name).subscribe((data) => {
       this.taskList = data;
+      this.showSnackBarMessage('Task deleted successfully.');
       this.dataSource = new MatTableDataSource(this.taskList);
+    }, () => {
+      this.showSnackBarMessage('Task could not be deleted. Please try again.');
+    });
+  }
+
+  private showSnackBarMessage(snackBarMessage: string, time: number = 3000): void {
+    this.matSnackBar.open(snackBarMessage, '', {
+      duration: time,
     });
   }
 }

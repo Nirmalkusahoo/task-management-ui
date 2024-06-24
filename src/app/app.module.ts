@@ -17,8 +17,10 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {SideMenuComponent} from "./side-menu/side-menu.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {TokenInterceptor} from "./services/toekn-Interceptor";
 
 
 @NgModule({
@@ -33,9 +35,15 @@ import {MatTableModule} from "@angular/material/table";
     MatToolbarModule, MatButtonModule, MatIconModule,
     MatSidenavModule, MatSelectModule, MatButtonModule,
     MatTableModule,
+    MatTooltipModule,
     AppRoutingModule,
     HttpClientModule
-  ]
+  ],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: TokenInterceptor,
+    multi: true,
+  }]
   ,
   bootstrap: [AppComponent]
 })

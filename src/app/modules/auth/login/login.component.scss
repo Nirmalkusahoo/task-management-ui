@@ -1,0 +1,30 @@
+.header-gap {
+  margin: 100px;
+  min-height: 800px;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  margin: auto;
+  margin-top: 10%;
+}
+
+.login-btn {
+  width: 20%;
+  align-self: center;
+}
+
+::ng-deep .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: black !important;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  button{
+    margin-right: 10px;
+  }
+}

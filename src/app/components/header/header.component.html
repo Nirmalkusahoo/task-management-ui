@@ -5,6 +5,9 @@
   <div class="right-menu">
     <button mat-button routerLink="/create">Create Task</button>
     <button mat-button routerLink="/list">All Task</button>
+    <button mat-button routerLink="/auth/login" *ngIf="!userService.isUserLoggedIn()">Login</button>
+    <mat-icon aria-hidden="false" aria-label="Example home icon" fontIcon="account_circle"
+              *ngIf="userService.isUserLoggedIn()" [matTooltip]="toolTipMessage||''"></mat-icon>
   </div>
 
 </mat-toolbar>

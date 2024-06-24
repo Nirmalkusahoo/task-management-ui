@@ -4,7 +4,6 @@ import {TaskService} from "../../services/task.service";
 import {TaskModel} from "../../models/task.model";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ActivatedRoute, Router} from "@angular/router";
-import {TaskStatus} from "../../models/task-status.model";
 
 @Component({
   selector: 'app-create-task',
@@ -13,17 +12,13 @@ import {TaskStatus} from "../../models/task-status.model";
 })
 export class CreateTaskComponent {
   public taskFormGroup: FormGroup;
-  public name: FormControl = new FormControl<any>('', [Validators.required])
-  public description: FormControl = new FormControl<any>('', [Validators.required])
-  public status: FormControl = new FormControl<any>('', [Validators.required])
+  public name: FormControl = new FormControl('', [Validators.required])
+  public description: FormControl = new FormControl()
+  public status: FormControl = new FormControl('', [Validators.required])
   private taskName: string;
   public isEditFlow: boolean = false;
 
-  statusOptions: TaskStatus[] = [
-    {value: 'inProgress', viewValue: 'In Progress'},
-    {value: 'completed', viewValue: 'Completed'},
-    {value: 'notStarted', viewValue: 'Not Started'},
-  ]
+  statusOptions: string[] = ['To Do', 'In Progress', 'Done']
 
   constructor(private formBuilder: FormBuilder, private taskService: TaskService, private matSnackBar: MatSnackBar, public router: Router, private activatedRoute: ActivatedRoute,) {
     this.taskFormGroup = this.formBuilder.group({
@@ -59,16 +54,37 @@ export class CreateTaskComponent {
   public onSubmit(): void {
     this.taskFormGroup.markAllAsTouched();
     if (this.taskFormGroup.valid) {
-      this.taskService.postTask(this.getTaskData()).subscribe(
-        (data) => {
-          this.showSnackBarMessage('Task created successfully');
-          this.router.navigate(['../list/']);
-        },
-        (error) => {
-          this.showSnackBarMessage('Error while creating task, please try after sometime');
-        }
-      );
+      if (this.isEditFlow) {
+        this.updateTask();
+      } else {
+        this.createTask()
+      }
     }
+  }
+
+  private createTask(): void {
+    this.taskService.postTask(this.getTaskData()).subscribe(
+      (data) => {
+        this.showSnackBarMessage('Task created successfully.');
+        this.taskFormGroup.reset();
+        this.taskFormGroup.updateValueAndValidity();
+      },
+      (error) => {
+        this.showSnackBarMessage('Error while creating task, please try after sometime.');
+      }
+    );
+  }
+
+  private updateTask(): void {
+    this.taskService.updateTask(this.getTaskData()).subscribe(
+      (data) => {
+        this.showSnackBarMessage('Task updated successfully.');
+        this.taskFormGroup.reset();
+      },
+      (error) => {
+        this.showSnackBarMessage('Error while updating task, please try after sometime.');
+      }
+    );
   }
 
   private getTaskData(): any {
@@ -81,6 +97,8 @@ export class CreateTaskComponent {
 
   private showSnackBarMessage(snackBarMessage: string): void {
     this.matSnackBar.open(snackBarMessage, '', {
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
       duration: 2000,
     });
   }
