@@ -2,6 +2,7 @@
 
 This project is a task management application built with Angular. It allows users to create, update, and manage tasks. Each task has a name, description, and status. The application uses Angular for the frontend, TypeScript as the primary programming language, and npm for package management.
 
+During development, backend requests are proxied via a configuration file named `proxy.conf.json`. This allows the frontend application to make requests to the backend server without running into CORS (Cross-Origin Resource Sharing) issues. Any requests that start with `/api` in the application will be redirected to the target specified in `proxy.conf.json`.
 ## Languages and Tools Used
 
 - TypeScript
